@@ -1,22 +1,28 @@
-let countries;
+import countries from "../data/countries"
+
+let countriesGeoData;
 
 function get() {
-  if (countries) {
-    return Promise.resolve(countries);
+  return countries;
+}
+
+function getGeoData() {
+  if (countriesGeoData) {
+    return Promise.resolve(countriesGeoData);
   }
 
-  console.log("Fetching countries...");
+  console.log("Fetching country polyline data...");
 
   return fetch("data/countries_geo_minified.json")
   .then(response => response.json())
   .then((countriesJson) => {
-    console.log("No. of countries: " + countriesJson.features.length);
-    countries = countriesJson.features;
-    return countries;
+    countriesGeoData = countriesJson.features;
+    return countriesGeoData;
   });
 }
 
 export default {
-  get
+  get,
+  getGeoData
 };
 

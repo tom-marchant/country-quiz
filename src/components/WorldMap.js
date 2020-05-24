@@ -15,8 +15,6 @@ export const WorldMap = ({selectedFeature}) => {
   if (selectedFeature) {
     boundingBox = convertBoundingBoxToLatLngBounds(selectedFeature.bbox);
 
-    console.log("boundingBox: ", boundingBox);
-
     viewport = {
       center: [selectedFeature.properties.LAT, selectedFeature.properties.LON],
       zoom: getAppropriateZoomLevel(boundingBox)
@@ -34,14 +32,14 @@ export const WorldMap = ({selectedFeature}) => {
               useFlyTo={true}
               zoom={2}
               minZoom={1}
-              maxZoom={8}
+              maxZoom={10}
               viewport={viewport}
               className={"world-map"}>
     <TileLayer
         url={MapConfig.TILE_LAYER_URL}
         attribution={MapConfig.TILE_ATTRIBUTION}
-        //tileSize={512}
-        //zoomOffset={-1}
+        tileSize={512}
+        zoomOffset={-1}
         id={MapConfig.TILE_LAYER_ID}/>
 
     { selectedFeature
@@ -60,7 +58,7 @@ function getAppropriateZoomLevel(boundingBox) {
   const latDelta = Math.abs((boundingBox[0][0] - boundingBox[1][0]));
   const longDelta = Math.abs((boundingBox[0][1] - boundingBox[1][1]));
 
-  const maxSize = Math.max(latDelta, longDelta).toFixed(0);
+  const maxSize = Math.max(latDelta, longDelta).toFixed(1);
 
   const zoomLevel = 8 - Math.min(Math.max(maxSize,2.0) / 4, 6).toFixed(0);
 

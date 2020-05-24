@@ -2,53 +2,50 @@ import Countries from "../cache/Countries";
 import Box from "@material-ui/core/Box";
 import {WorldMap} from "./WorldMap";
 import React, {useEffect, useState} from "react";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 export const AppBody = () => {
 
-  const [countries, setCountries] = useState([]);
-  const [currentCountryName, setCurrentCountryName] = useState(
-      null);
+  const [countriesGeoData, setCountriesGeoData] = useState([]);
+  const [currentCountryName, setCurrentCountryName] = useState(null);
 
   useEffect(() => {
-    Countries.get().then((fetchedCountries) => {
-      setCountries(fetchedCountries);
-      return fetchedCountries;
+    Countries.getGeoData().then((fetchedGeoData) => {
+      setCountriesGeoData(fetchedGeoData);
     });
   }, []);
 
   let selectedFeature;
 
-  if (countries.length && currentCountryName) {
-    selectedFeature = countries.find(
+  if (countriesGeoData.length && currentCountryName) {
+    selectedFeature = countriesGeoData.find(
         country => country.properties.NAME === currentCountryName)
   }
 
   return <Box>
     <WorldMap selectedFeature={selectedFeature}/>
-    <CountryList countries={countries}
+    <CountryList currentCountryName={currentCountryName}
                  setCurrentCountryName={setCurrentCountryName}/>
   </Box>
 };
 
-const CountryList = ({countries, setCurrentCountryName}) => {
-  console.log("Rendering country list with " + countries.length + " elements");
-  return <div>
-    <List component="nav">
-      {countries.map((country) =>
-          <CountryListItem country={country}
-                           setCurrentCountryName={setCurrentCountryName}
-                           key={country.properties.NAME}/>)}
-    </List>
-  </div>
-};
+const CountryList = ({currentCountryName, setCurrentCountryName}) => {
+  const options = Countries.get().map((country) => country.name);
 
-const CountryListItem = ({country, setCurrentCountryName}) => {
-  return <ListItem button
-                   onClick={() => setCurrentCountryName(
-                       country.properties.NAME)}>
-    <ListItemText primary={country.properties.NAME}/>
-  </ListItem>
-}
+  return <Box className="countries-autocomplete-holder">
+    <Autocomplete
+        id="countries-autocomplete"
+        options={options}
+        getOptionLabel={(option) => option}
+        value={currentCountryName}
+        onChange={(e, newValue) => {
+         setCurrentCountryName(newValue)
+        }}
+        renderInput={(params) => <TextField {...params}
+                                            label="Select a country"
+                                            variant="outlined" />}
+    />
+
+  </Box>
+};
