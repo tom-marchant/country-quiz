@@ -1,8 +1,25 @@
+body {
+  margin: 0;
+}
+
 .world-map {
   height: 500px;
 }
 
 .countries-autocomplete-holder {
-  padding: 16px 0px;
+  padding: 16px 8px;
   max-width: 400px;
+}
+
+.countries-answer-buttons-holder {
+  padding: 32px 8px;
+}
+
+.country-answer-button {
+  width: 200px;
+  height: 80px;
+}
+
+.drawer-items {
+  min-width: 400px;
 }

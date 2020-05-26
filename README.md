@@ -4,6 +4,15 @@ Test and improve your terrible geography skills.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## TODO
+
+- Improve zoom level resolver
+- Add Dark/Light Mode toggle
+- Improve drawer menu
+- Break up GeoJSON into separate files
+
+---
+
 ## Available Scripts
 
 In the project directory, you can run:
