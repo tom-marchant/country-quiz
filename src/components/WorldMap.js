@@ -1,14 +1,26 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {GeoJSON, Map, TileLayer} from "react-leaflet";
 import MapConfig from "../config/MapConfig";
+import Countries from "../cache/Countries";
 
 // Credit to https://oramind.com/country-border-highlighting-with-leaflet-js/
 // Shapefile compressed/converted to GeoJSON via https://gdal.org/
 // ogr2ogr -f GeoJSON countries_geo.json TM_WORLD_BORDERS-0.3.shp -lco WRITE_BBOX=YES -lco COORDINATE_PRECISION=2
 // https://gdal.org/drivers/vector/geojson.html
 
-export const WorldMap = ({selectedFeature}) => {
-  const startPosition = [51.505, 0];
+const INITIAL_START_POSITION = [51.505, 0];
+
+export const WorldMap = ({selectedCountryName}) => {
+  const [selectedFeature, setSelectedFeature] = useState(null);
+
+  useEffect(() => {
+    Countries.getGeoData().then((geoData) => {
+      if (selectedCountryName) {
+        setSelectedFeature(geoData.find(
+            country => country.properties.NAME === selectedCountryName))
+      }
+    });
+  }, [selectedCountryName]);
 
   let viewport = null, boundingBox = null;
 
@@ -21,12 +33,12 @@ export const WorldMap = ({selectedFeature}) => {
     }
   } else {
     viewport = {
-      center: startPosition,
+      center: INITIAL_START_POSITION,
       zoom: 2
     }
   }
 
-  return <Map center={startPosition}
+  return <Map center={INITIAL_START_POSITION}
               animate={true}
               duration={1}
               useFlyTo={true}

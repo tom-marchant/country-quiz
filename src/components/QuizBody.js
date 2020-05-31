@@ -1,41 +1,29 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Countries from "../cache/Countries";
 import {buildNextQuestion} from "./CountryQuestionBuilder";
 import {WorldMap} from "./WorldMap";
 
 export const QuizBody = () => {
-  const [countriesGeoData, setCountriesGeoData] = useState([]);
-  const [currentCountryName, setCurrentCountryName] = useState(null);
   const [question, setQuestion] = useState(null);
 
-  useEffect(() => {
-    Countries.getGeoData().then((fetchedGeoData) => {
-      setCountriesGeoData(fetchedGeoData);
-    });
-  }, []);
-
-  let selectedFeature;
-
-  if (countriesGeoData.length && currentCountryName) {
-    selectedFeature = countriesGeoData.find(
-        country => country.properties.NAME === currentCountryName)
-  }
+  let selectedCountryName;
 
   if (!question) {
     // Select a country at random.
     const nextQuestion = buildNextQuestion(Countries.get());
     setQuestion(nextQuestion);
-    setCurrentCountryName(nextQuestion.answer.name)
+  }
+
+  if (question)  {
+    selectedCountryName = question.answer.name;
   }
 
   return <Box>
-    <WorldMap selectedFeature={selectedFeature}/>
-    <QuizButtons currentCountryName={currentCountryName}
-                 setCurrentCountryName={setCurrentCountryName}
-                 question={question}/>
+    <WorldMap selectedCountryName={selectedCountryName}/>
+    <QuizButtons question={question}/>
   </Box>
 };
 
