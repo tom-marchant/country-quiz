@@ -7,8 +7,6 @@ import {AppMode} from "./AppMode";
 import Drawer from "@material-ui/core/Drawer";
 
 export const AppMenu = ({appMode, setAppMode, menuOpen, setMenuOpen}) => {
-  console.log("menuOpen? " + menuOpen);
-
   return <Drawer
       open={menuOpen}
       onClose={() => setMenuOpen(false)}>
@@ -16,10 +14,7 @@ export const AppMenu = ({appMode, setAppMode, menuOpen, setMenuOpen}) => {
   </Drawer>
 };
 
-
 const buildMenuItems = (setAppMode, setMenuOpen) => {
-  console.log("O.k = ", Object.keys(AppMode));
-
   return <div role="presentation">
     <List className={"drawer-items"}>
       {Object.keys(AppMode).map((key) =>
