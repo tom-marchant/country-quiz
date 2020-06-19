@@ -47,12 +47,15 @@ export const WorldMap = ({selectedCountryName}) => {
               maxZoom={10}
               viewport={viewport}
               className={"world-map"}>
-    <TileLayer
-        url={MapConfig.TILE_LAYER_URL}
-        attribution={MapConfig.TILE_ATTRIBUTION}
-        tileSize={512}
-        zoomOffset={-1}
-        id={MapConfig.TILE_LAYER_ID}/>
+
+    { MapConfig.hasAccessToken
+        ? <TileLayer
+            url={MapConfig.TILE_LAYER_URL}
+            attribution={MapConfig.TILE_ATTRIBUTION}
+            tileSize={512}
+            zoomOffset={-1}
+            id={MapConfig.TILE_LAYER_ID}/>
+        : null }
 
     { selectedFeature
         ? <GeoJSON data={selectedFeature}

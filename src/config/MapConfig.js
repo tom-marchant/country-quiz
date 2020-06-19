@@ -1,6 +1,8 @@
 const MAPBOX_ACCESS_TOKEN = "no";
 
 export default {
+  hasAccessToken: Boolean(MAPBOX_ACCESS_TOKEN),
+
   TILE_LAYER_URL: "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=" + MAPBOX_ACCESS_TOKEN,
   TILE_ATTRIBUTION: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, "
     + "<a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, "

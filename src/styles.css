@@ -1,9 +1,14 @@
 body {
   margin: 0;
+  height: 100vh;
+}
+
+.drawer-items {
+  min-width: 400px;
 }
 
 .world-map {
-  height: 500px;
+  height: 60vh;
 }
 
 .countries-autocomplete-holder {
@@ -20,6 +25,30 @@ body {
   height: 80px;
 }
 
-.drawer-items {
-  min-width: 400px;
+.answer-caption-container {
+  text-align: center;
+}
+
+.final-score-container {
+  padding: 0px;
+  text-align: center;
+}
+
+.final-score {
+  padding: 8px;
+}
+
+.final-score-verdict {
+  padding: 8px;
+}
+
+@media screen and (max-width: 500px) {
+  .country-answer-button {
+    width: 150px;
+    height: 60px;
+  }
+
+  .countries-answer-buttons-holder {
+    padding: 8px 0px 8px 0px;
+  }
 }

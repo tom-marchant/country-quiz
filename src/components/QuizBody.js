@@ -2,9 +2,17 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import React, {useState} from "react";
-import Countries from "../cache/Countries";
-import {buildNextQuestion} from "./CountryQuestionBuilder";
 import {WorldMap} from "./WorldMap";
+import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
+import {INITIAL_QUIZ_STATE, QuizState} from "./Quiz";
+import {buildQuestions} from "./CountryQuestionBuilder";
+import Countries from "../cache/Countries";
+
+const GameState = {
+  IN_PROGRESS: 0,
+  FINISHED: 1,
+};
 
 const ButtonState = {
   AVAILABLE: {
@@ -24,44 +32,115 @@ const ButtonState = {
   }
 };
 
+const questionCount = 5;
+
+function getCurrentQuestion(questions, quizState) {
+  const currentQuestion = questions[quizState.currentQuestionIndex];
+
+  return {
+    ...currentQuestion,
+    answered: quizState.answers.length > quizState.currentQuestionIndex,
+    answeredCorrectly: quizState.answers[quizState.currentQuestionIndex] || false
+  }
+}
+
+function submitAnswer(answer, questions, quizState) {
+  const currentQuestion = getCurrentQuestion(questions, quizState);
+  const isCorrectAnswer = (answer === currentQuestion.answer.name);
+
+  const updatedAnswers = quizState.answers.slice();
+  updatedAnswers[quizState.currentQuestionIndex] = isCorrectAnswer;
+
+  return new QuizState(
+      updatedAnswers,
+      quizState.currentQuestionIndex
+  )
+}
+
+function advanceToNextQuestion(quizState) {
+  return new QuizState(
+      quizState.answers.slice(),
+      quizState.currentQuestionIndex + 1
+  )
+}
+
+function getGameState(questions, quizState) {
+  if (quizState.currentQuestionIndex >= questions.length) {
+    return GameState.FINISHED
+  } else {
+    return GameState.IN_PROGRESS
+  }
+}
+
+function getScore(quizState) {
+  const correctAnswerCount = quizState.answers.filter((answer) => answer).length;
+  const totalQuestions = quizState.answers.length;
+
+  let fractionCorrect = correctAnswerCount / totalQuestions;
+  let verdict;
+
+  if (fractionCorrect >= 0.9) {
+    verdict = "You're a walking atlas!"
+  } else if (fractionCorrect >= 0.7) {
+    verdict = "Impressive."
+  } else if (fractionCorrect >= 0.6) {
+    verdict = "Not great, not terrible. Keep practising."
+  } else if (fractionCorrect >= 0.4) {
+    verdict = "Mediocre."
+  } else {
+    verdict = "That was dismal. You can only get better from here."
+  }
+
+  return {
+    correctAnswerCount,
+    totalQuestions,
+    verdict
+  };
+}
+
 export const QuizBody = () => {
-  const [question, setQuestion] = useState(null);
+  const [questions, setQuestions] = useState(buildQuestions(Countries.get(), questionCount));
+  const [quizState, setQuizState] = useState(INITIAL_QUIZ_STATE);
 
-  let selectedCountryName, submitAnswer;
+  if (questions && quizState) {
+    const gameState = getGameState(questions, quizState);
 
-  if (!question) {
-    // Select a country at random.
-    const nextQuestion = buildNextQuestion(Countries.get());
-    setQuestion(nextQuestion);
-  }
+    if (gameState === GameState.IN_PROGRESS) {
+      const currentQuestion = getCurrentQuestion(questions, quizState);
+      const selectedCountryName = currentQuestion ? currentQuestion.answer.name : null;
 
-  if (question)  {
-    selectedCountryName = question.answer.name;
-    submitAnswer = (answer) => {
-      if (question.answered) {
-        return
-      }
+      return <Box>
+        <WorldMap selectedCountryName={selectedCountryName}/>
+        <QuizButtons
+            question={currentQuestion}
+            submitAnswerCallback={(answer) => {
+              const updatedQuizState = submitAnswer(answer, questions, quizState);
+              setQuizState(updatedQuizState);
+            }}/>
+        <AnswerCaption
+            question={currentQuestion}
+            advanceToNextQuestionCallback={() => {
+              const updatedQuizState = advanceToNextQuestion(quizState);
+              setQuizState(updatedQuizState);
+            }}/>
+      </Box>
+    } else {
+      const finalScore = getScore(quizState);
 
-      if (answer === question.answer.name) {
-        // Increment score
-      }
-
-      setQuestion({
-        ...question,
-        answered: true
-      });
-
-      setTimeout(() => {
-        setQuestion(buildNextQuestion(Countries.get()));
-      }, 3000)
+      return <Box>
+        <WorldMap/>
+        <FinalScore
+            finalScore={finalScore}
+            newGameCallback={() => {
+              setQuestions(buildQuestions(Countries.get(), questionCount));
+              setQuizState(INITIAL_QUIZ_STATE);
+            }}/>
+      </Box>
     }
-  }
 
-  return <Box>
-    <WorldMap selectedCountryName={selectedCountryName}/>
-    <QuizButtons question={question}
-                 submitAnswer={submitAnswer}/>
-  </Box>
+  } else {
+    return null;
+  }
 };
 
 function getButtonState(question, option) {
@@ -74,28 +153,74 @@ function getButtonState(question, option) {
   }
 }
 
-const QuizButtons = ({question, submitAnswer}) => {
+const QuizButtons = ({question, submitAnswerCallback}) => {
   return <Box className="countries-answer-buttons-holder">
-    <Grid container justify="center" spacing={3}>
+    <Grid container justify="center" spacing={2}>
       {question.options.map((option) =>
           <Grid key={option.name} item>
-            <CountryAnswerButton option={option}
-                                 buttonState={getButtonState(question, option)}
-                                 submitAnswer={submitAnswer}/>
+            <CountryAnswerButton
+                option={option}
+                buttonState={getButtonState(question, option)}
+                submitAnswerCallback={submitAnswerCallback}/>
           </Grid>)}
     </Grid>
   </Box>
 };
 
-const CountryAnswerButton = ({option, buttonState, submitAnswer}) => {
-  return <Button variant={buttonState.variant}
-                 color={buttonState.color}
-                 className="country-answer-button"
-                 onClick={() => {
-                    if (!buttonState.disabled) {
-                      submitAnswer(option.name)
-                    }
-                 }}>
+const CountryAnswerButton = ({option, buttonState, submitAnswerCallback}) => {
+  return <Button
+      variant={buttonState.variant}
+      color={buttonState.color}
+      className="country-answer-button"
+      onClick={() => {
+        if (!buttonState.disabled) {
+          submitAnswerCallback(option.name)
+        }
+      }}>
     {option.name}
   </Button>
+};
+
+const AnswerCaption = ({question, advanceToNextQuestionCallback}) => {
+  let caption = "";
+
+  if (question.answered) {
+    if (question.answeredCorrectly) {
+      caption = "Yeah! That's right."
+    } else {
+      caption = "You idiot."
+    }
+  }
+
+  return <Container className={"answer-caption-container"}>
+    <Typography variant="subtitle2">{caption}</Typography>
+
+    {question.answered
+        ? <Button variant={'outlined'}
+                  onClick={() => {
+                    advanceToNextQuestionCallback()
+                  }}>
+          {"Next"}
+        </Button>
+        : null}
+  </Container>
+};
+
+const FinalScore = ({finalScore, newGameCallback}) => {
+  return <Container className={"final-score-container"}>
+    <Typography
+        variant="h3"
+        className={"final-score"}>You got {finalScore.correctAnswerCount} / {finalScore.totalQuestions}</Typography>
+    <Typography
+        variant="subtitle2"
+        className={"final-score-verdict"}>{finalScore.verdict}</Typography>
+
+    <Button
+        variant={'outlined'}
+        onClick={() => {
+          newGameCallback()
+        }}>
+      {"Try again"}
+    </Button>
+  </Container>
 };

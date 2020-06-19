@@ -6,6 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## TODO
 
+- Deal with long country names in option buttons
 - Improve zoom level resolver
 - Add Dark/Light Mode toggle
 - Improve drawer menu
