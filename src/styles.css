@@ -17,12 +17,17 @@ body {
 }
 
 .countries-answer-buttons-holder {
-  padding: 32px 8px;
+  padding: 16px 8px;
 }
 
 .country-answer-button {
   width: 200px;
   height: 80px;
+}
+
+.country-answer-button--label {
+  text-transform: none;
+  line-height: 1.2;
 }
 
 .answer-caption-container {
@@ -50,5 +55,11 @@ body {
 
   .countries-answer-buttons-holder {
     padding: 8px 0px 8px 0px;
+  }
+}
+
+@media screen and (max-height: 670px) {
+  .world-map {
+    height: 50vh;
   }
 }

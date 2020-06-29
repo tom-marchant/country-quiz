@@ -14,3 +14,7 @@ export function shuffle(array) {
   }
   return a;
 }
+
+export function getRandom(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}

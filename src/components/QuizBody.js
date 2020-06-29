@@ -1,13 +1,15 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {WorldMap} from "./WorldMap";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import {INITIAL_QUIZ_STATE, QuizState} from "./Quiz";
+import {INITIAL_QUIZ_STATE, QuizState} from "./QuizState";
 import {buildQuestions} from "./CountryQuestionBuilder";
 import Countries from "../cache/Countries";
+import {AnswerCaptions} from "./Copy";
+import {getRandom} from "../util/ArrayUtil";
 
 const GameState = {
   IN_PROGRESS: 0,
@@ -98,8 +100,10 @@ function getScore(quizState) {
   };
 }
 
+const INITIAL_QUESTIONS = buildQuestions(Countries.get(), questionCount);
+
 export const QuizBody = () => {
-  const [questions, setQuestions] = useState(buildQuestions(Countries.get(), questionCount));
+  const [questions, setQuestions] = useState(INITIAL_QUESTIONS);
   const [quizState, setQuizState] = useState(INITIAL_QUIZ_STATE);
 
   if (questions && quizState) {
@@ -110,7 +114,8 @@ export const QuizBody = () => {
       const selectedCountryName = currentQuestion ? currentQuestion.answer.name : null;
 
       return <Box>
-        <WorldMap selectedCountryName={selectedCountryName}/>
+        <WorldMap selectedCountryName={selectedCountryName}
+                  showCountryName={currentQuestion.answered}/>
         <QuizButtons
             question={currentQuestion}
             submitAnswerCallback={(answer) => {
@@ -169,6 +174,9 @@ const QuizButtons = ({question, submitAnswerCallback}) => {
 
 const CountryAnswerButton = ({option, buttonState, submitAnswerCallback}) => {
   return <Button
+      classes={{
+        label: 'country-answer-button--label'
+      }}
       variant={buttonState.variant}
       color={buttonState.color}
       className="country-answer-button"
@@ -182,15 +190,19 @@ const CountryAnswerButton = ({option, buttonState, submitAnswerCallback}) => {
 };
 
 const AnswerCaption = ({question, advanceToNextQuestionCallback}) => {
-  let caption = "";
+  const [caption, setCaption] = useState("");
 
-  if (question.answered) {
-    if (question.answeredCorrectly) {
-      caption = "Yeah! That's right."
+  useEffect(() => {
+    if (question.answered) {
+      if (question.answeredCorrectly) {
+        setCaption(getRandom(AnswerCaptions.correct));
+      } else {
+        setCaption(getRandom(AnswerCaptions.incorrect));
+      }
     } else {
-      caption = "You idiot."
+      setCaption("");
     }
-  }
+  }, [question]);
 
   return <Container className={"answer-caption-container"}>
     <Typography variant="subtitle2">{caption}</Typography>

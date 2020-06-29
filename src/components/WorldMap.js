@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {GeoJSON, Map, TileLayer} from "react-leaflet";
+import {GeoJSON, Map, TileLayer, Tooltip} from "react-leaflet";
 import MapConfig from "../config/MapConfig";
 import Countries from "../cache/Countries";
 
@@ -10,16 +10,18 @@ import Countries from "../cache/Countries";
 
 const INITIAL_START_POSITION = [51.505, 0];
 
-export const WorldMap = ({selectedCountryName}) => {
+export const WorldMap = ({selectedCountryName, showCountryName}) => {
   const [selectedFeature, setSelectedFeature] = useState(null);
 
   useEffect(() => {
-    Countries.getGeoData().then((geoData) => {
-      if (selectedCountryName) {
+    if (selectedCountryName) {
+      Countries.getGeoData().then((geoData) => {
         setSelectedFeature(geoData.find(
             country => country.properties.NAME === selectedCountryName))
-      }
-    });
+      });
+    } else {
+      setSelectedFeature(null);
+    }
   }, [selectedCountryName]);
 
   let viewport = null, boundingBox = null;
@@ -63,7 +65,17 @@ export const WorldMap = ({selectedCountryName}) => {
                    style={{
                      "weight": 1,
                      "opacity": 0.9
-                   }} />
+                   }} >
+          { showCountryName
+              ? <Tooltip permanent={true}
+                         opacity={0.7}
+                         style={{
+                           "font-size": "16pt"
+                         }} >
+                  {selectedFeature.properties.NAME}
+                </Tooltip>
+              : null }
+        </GeoJSON>
         : null }
   </Map>
 };
@@ -77,9 +89,9 @@ function getAppropriateZoomLevel(boundingBox) {
 
   const zoomLevel = 8 - Math.min(Math.max(maxSize,2.0) / 4, 6).toFixed(0);
 
-  console.log("Lat Delta: " + latDelta + ", Long Delta: " + longDelta);
-  console.log("Max size was: " + maxSize);
-  console.log("Zoom was: " + zoomLevel);
+  // console.log("Lat Delta: " + latDelta + ", Long Delta: " + longDelta);
+  // console.log("Max size was: " + maxSize);
+  // console.log("Zoom was: " + zoomLevel);
 
   return zoomLevel;
 }

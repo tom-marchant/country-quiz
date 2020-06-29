@@ -1,4 +1,4 @@
-const MAPBOX_ACCESS_TOKEN = "no";
+const MAPBOX_ACCESS_TOKEN = "";
 
 export default {
   hasAccessToken: Boolean(MAPBOX_ACCESS_TOKEN),
