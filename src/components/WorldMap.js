@@ -68,10 +68,7 @@ export const WorldMap = ({selectedCountryName, showCountryName}) => {
                    }} >
           { showCountryName
               ? <Tooltip permanent={true}
-                         opacity={0.7}
-                         style={{
-                           "font-size": "16pt"
-                         }} >
+                         opacity={0.7}>
                   {selectedFeature.properties.NAME}
                 </Tooltip>
               : null }
