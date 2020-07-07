@@ -7,9 +7,9 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import {INITIAL_QUIZ_STATE, QuizState} from "./QuizState";
 import {buildQuestions} from "./CountryQuestionBuilder";
-import Countries from "../cache/Countries";
 import {AnswerCaptions} from "./Copy";
 import {getRandom} from "../util/ArrayUtil";
+import {GameTypeSelector} from "./GameTypeSelector";
 
 const GameState = {
   IN_PROGRESS: 0,
@@ -35,6 +35,12 @@ const ButtonState = {
 };
 
 const questionCount = 5;
+
+function initializeGame(gameType, setQuestions, setQuizState) {
+  console.log("Initializing new game...");
+  setQuestions(buildQuestions(gameType.getCountries(), questionCount));
+  setQuizState(INITIAL_QUIZ_STATE)
+}
 
 function getCurrentQuestion(questions, quizState) {
   const currentQuestion = questions[quizState.currentQuestionIndex];
@@ -100,13 +106,20 @@ function getScore(quizState) {
   };
 }
 
-const INITIAL_QUESTIONS = buildQuestions(Countries.get(), questionCount);
-
 export const QuizBody = () => {
-  const [questions, setQuestions] = useState(INITIAL_QUESTIONS);
-  const [quizState, setQuizState] = useState(INITIAL_QUIZ_STATE);
+  const [gameType, setGameType] = useState(null);
+  const [questions, setQuestions] = useState(null);
+  const [quizState, setQuizState] = useState(null);
 
-  if (questions && quizState) {
+  useEffect(() => {
+    if (gameType) {
+      initializeGame(gameType, setQuestions, setQuizState);
+    }
+  }, [gameType]);
+
+  if (!gameType) {
+    return <GameTypeSelector setGameType={setGameType} />
+  } else if (questions && quizState) {
     const gameState = getGameState(questions, quizState);
 
     if (gameState === GameState.IN_PROGRESS) {
@@ -136,10 +149,7 @@ export const QuizBody = () => {
         <WorldMap/>
         <FinalScore
             finalScore={finalScore}
-            newGameCallback={() => {
-              setQuestions(buildQuestions(Countries.get(), questionCount));
-              setQuizState(INITIAL_QUIZ_STATE);
-            }}/>
+            newGameCallback={() => initializeGame(gameType, setQuestions, setQuizState)}/>
       </Box>
     }
 
