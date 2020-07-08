@@ -47,6 +47,10 @@ body {
   padding: 8px;
 }
 
+.final-score-button {
+  width: 150px;
+}
+
 .gametype-selector-container {
   padding: 16px 0px;
 }

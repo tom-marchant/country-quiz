@@ -14,6 +14,11 @@ class GameType {
 
 export const GameTypes = [
   new GameType(
+      "The Whole Wide World",
+      "world.jpg",
+      () => true
+  ),
+  new GameType(
       "Europe",
       "europe.jpg",
       (country) => country.continentCode === "EU"

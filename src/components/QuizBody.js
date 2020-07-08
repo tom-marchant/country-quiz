@@ -34,7 +34,7 @@ const ButtonState = {
   }
 };
 
-const questionCount = 5;
+const questionCount = 10;
 
 function initializeGame(gameType, setQuestions, setQuizState) {
   console.log("Initializing new game...");
@@ -149,7 +149,8 @@ export const QuizBody = () => {
         <WorldMap/>
         <FinalScore
             finalScore={finalScore}
-            newGameCallback={() => initializeGame(gameType, setQuestions, setQuizState)}/>
+            newGameCallback={() => initializeGame(gameType, setQuestions, setQuizState)}
+            chooseGameCallback={() => setGameType(null)}/>
       </Box>
     }
 
@@ -185,11 +186,11 @@ const QuizButtons = ({question, submitAnswerCallback}) => {
 const CountryAnswerButton = ({option, buttonState, submitAnswerCallback}) => {
   return <Button
       classes={{
-        label: 'country-answer-button--label'
+        root: "country-answer-button",
+        label: "country-answer-button--label"
       }}
       variant={buttonState.variant}
       color={buttonState.color}
-      className="country-answer-button"
       onClick={() => {
         if (!buttonState.disabled) {
           submitAnswerCallback(option.name)
@@ -228,7 +229,7 @@ const AnswerCaption = ({question, advanceToNextQuestionCallback}) => {
   </Container>
 };
 
-const FinalScore = ({finalScore, newGameCallback}) => {
+const FinalScore = ({finalScore, newGameCallback, chooseGameCallback}) => {
   return <Container className={"final-score-container"}>
     <Typography
         variant="h3"
@@ -237,12 +238,31 @@ const FinalScore = ({finalScore, newGameCallback}) => {
         variant="subtitle2"
         className={"final-score-verdict"}>{finalScore.verdict}</Typography>
 
-    <Button
-        variant={'outlined'}
-        onClick={() => {
-          newGameCallback()
-        }}>
-      {"Try again"}
-    </Button>
+    <Grid container justify="center" spacing={2}>
+      <Grid item>
+        <Button
+            classes={{
+              root: "final-score-button"
+            }}
+            variant={'outlined'}
+            onClick={() => {
+              newGameCallback()
+            }}>
+          {"Try again"}
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+            classes={{
+              root: "final-score-button"
+            }}
+            variant={'outlined'}
+            onClick={() => {
+              chooseGameCallback()
+            }}>
+          {"Change game"}
+        </Button>
+      </Grid>
+    </Grid>
   </Container>
 };
