@@ -7,5 +7,6 @@ export default {
   TILE_ATTRIBUTION: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, "
     + "<a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, "
     + "Imagery &copy; <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-  TILE_LAYER_ID: "tmarcho/ckaa467xe1zjj1iqp2puy1r6t"
+  //TILE_LAYER_ID: "tmarcho/ckaa467xe1zjj1iqp2puy1r6t"
+  TILE_LAYER_ID: "tmarcho/ckd4qj8yb1adw1iqn2icrkcam"
 }

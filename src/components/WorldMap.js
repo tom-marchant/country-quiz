@@ -64,7 +64,10 @@ export const WorldMap = ({selectedCountryName, showCountryName}) => {
                    key={selectedFeature.properties.NAME}
                    style={{
                      "weight": 1,
-                     "opacity": 0.9
+                     "opacity": 1,
+                     "color": "#ddd",
+                     "fillColor": "#3f51b5",
+                     "fillOpacity": "0.5"
                    }} >
           { showCountryName
               ? <Tooltip permanent={true}
@@ -87,8 +90,14 @@ function getAppropriateZoomLevel(boundingBox) {
   const zoomLevel = 8 - Math.min(Math.max(maxSize,2.0) / 4, 6).toFixed(0);
 
   // console.log("Lat Delta: " + latDelta + ", Long Delta: " + longDelta);
-  // console.log("Max size was: " + maxSize);
-  // console.log("Zoom was: " + zoomLevel);
+  console.log("Max size was: " + maxSize);
+  console.log("Zoom was: " + zoomLevel);
+
+  // For size < 0.5, zoom should be maxed
+  // For size 6, zoom should be 6
+  // For size 20, zoom should be 4
+  // For size 25, zoom should be 3
+  // For size 60, zoom should be 3
 
   return zoomLevel;
 }

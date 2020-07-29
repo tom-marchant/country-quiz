@@ -10,6 +10,7 @@ import {buildQuestions} from "./CountryQuestionBuilder";
 import {AnswerCaptions} from "./Copy";
 import {getRandom} from "../util/ArrayUtil";
 import {GameTypeSelector} from "./GameTypeSelector";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const GameState = {
   IN_PROGRESS: 0,
@@ -50,6 +51,10 @@ function getCurrentQuestion(questions, quizState) {
     answered: quizState.answers.length > quizState.currentQuestionIndex,
     answeredCorrectly: quizState.answers[quizState.currentQuestionIndex] || false
   }
+}
+
+function getProgress(questions, quizState) {
+  return ((quizState.currentQuestionIndex + 1) / questions.length) * 100;
 }
 
 function submitAnswer(answer, questions, quizState) {
@@ -129,6 +134,7 @@ export const QuizBody = () => {
       return <Box>
         <WorldMap selectedCountryName={selectedCountryName}
                   showCountryName={currentQuestion.answered}/>
+        <LinearProgress variant="determinate" value={getProgress(questions, quizState)} />
         <QuizButtons
             question={currentQuestion}
             submitAnswerCallback={(answer) => {
@@ -147,6 +153,7 @@ export const QuizBody = () => {
 
       return <Box>
         <WorldMap/>
+        <LinearProgress variant="determinate" value={100} />
         <FinalScore
             finalScore={finalScore}
             newGameCallback={() => initializeGame(gameType, setQuestions, setQuizState)}

@@ -33,4 +33,14 @@ export const GameTypes = [
       "americas.jpg",
       (country) => country.continentCode === "NA" || country.continentCode === "SA"
   ),
+  new GameType(
+      "Asia",
+      "asia.jpg",
+      (country) => country.continentCode === "AS"
+  ),
+  new GameType(
+      "Oceania",
+      "oceania.jpg",
+      (country) => country.continentCode === "OC"
+  ),
 ];

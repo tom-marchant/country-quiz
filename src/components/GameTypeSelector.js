@@ -1,4 +1,3 @@
-import Box from "@material-ui/core/Box";
 import React from "react";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -7,16 +6,19 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import {GameTypes} from "./GameType";
 import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 
 export const GameTypeSelector = ({setGameType}) => {
-  return <Box className={"gametype-selector-container"}>
-    <Grid container justify="center" spacing={3}>
+  return <Container className={"gametype-selector-container"}>
+    <Grid container
+          justify="center"
+          spacing={3}>
       {GameTypes.map(gameType => <GameTypeCard
           key={gameType.name}
           gameType={gameType}
           setGameType={setGameType}/>)}
     </Grid>
-  </Box>
+  </Container>
 };
 
 const GameTypeCard = ({gameType, setGameType}) => {
