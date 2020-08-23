@@ -10,7 +10,7 @@ import Countries from "../cache/Countries";
 
 const INITIAL_START_POSITION = [51.505, 0];
 
-export const WorldMap = ({selectedCountryName, showCountryName}) => {
+export const WorldMap = ({selectedCountryName}) => {
   const [selectedFeature, setSelectedFeature] = useState(null);
 
   useEffect(() => {
@@ -69,12 +69,6 @@ export const WorldMap = ({selectedCountryName, showCountryName}) => {
                      "fillColor": "#3f51b5",
                      "fillOpacity": "0.5"
                    }} >
-          { showCountryName
-              ? <Tooltip permanent={true}
-                         opacity={0.7}>
-                  {selectedFeature.properties.NAME}
-                </Tooltip>
-              : null }
         </GeoJSON>
         : null }
   </Map>
@@ -87,17 +81,27 @@ function getAppropriateZoomLevel(boundingBox) {
 
   const maxSize = Math.max(latDelta, longDelta).toFixed(1);
 
-  const zoomLevel = 8 - Math.min(Math.max(maxSize,2.0) / 4, 6).toFixed(0);
-
-  // console.log("Lat Delta: " + latDelta + ", Long Delta: " + longDelta);
   console.log("Max size was: " + maxSize);
-  console.log("Zoom was: " + zoomLevel);
 
-  // For size < 0.5, zoom should be maxed
-  // For size 6, zoom should be 6
-  // For size 20, zoom should be 4
-  // For size 25, zoom should be 3
-  // For size 60, zoom should be 3
+  let zoomLevel = 1;
+
+  if (maxSize <= 0.25) {
+    zoomLevel = 9
+  } else if (maxSize <= 1.5) {
+    zoomLevel = 7
+  } else if (maxSize <= 6) {
+    zoomLevel = 6
+  } else if (maxSize <= 15) {
+    zoomLevel = 5
+  } else if (maxSize <= 25) {
+    zoomLevel = 4
+  } else if (maxSize <= 65) {
+    zoomLevel = 3
+  } else {
+    zoomLevel = 2
+  }
+
+  console.log("Zoom was: " + zoomLevel);
 
   return zoomLevel;
 }

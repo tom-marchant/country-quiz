@@ -14,9 +14,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## TODO
 
 - Deal with long country names in option buttons
-- Improve zoom level resolver
-- Add Dark/Light Mode toggle
-- Improve drawer menu
+- Improve zoom level resolver on mobile screen
+- Add map style selector in menu
+- Add close button to drawer menu
+- Use sticky header for drawer menu
 - Break up GeoJSON into separate files
 
 ---

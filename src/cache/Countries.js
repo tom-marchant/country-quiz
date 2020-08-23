@@ -15,6 +15,11 @@ function getGeoData() {
 
   return fetch("data/countries_geo_minified.json")
   .then(response => response.json())
+  .then(json => {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(json), 300);
+    })
+  })
   .then((countriesJson) => {
     countriesGeoData = countriesJson.features;
     return countriesGeoData;

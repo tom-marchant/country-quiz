@@ -3,12 +3,12 @@ body {
   height: 100vh;
 }
 
-.drawer-items {
-  min-width: 400px;
+.hidden {
+  visibility: hidden;
 }
 
-.world-map {
-  height: 60vh;
+.drawer-items {
+  min-width: 400px;
 }
 
 .countries-autocomplete-holder {
@@ -40,11 +40,12 @@ body {
 }
 
 .final-score {
-  padding: 8px;
+  padding: 2px;
 }
 
 .final-score-verdict {
-  padding: 8px;
+  padding-top: 8px;
+  padding-bottom: 24px;
 }
 
 .final-score-button {
@@ -74,8 +75,37 @@ body {
   }
 }
 
-@media screen and (max-height: 670px) {
+.world-map {
+  height: 70vh;
+}
+
+@media screen and (max-height: 700px) {
+  .world-map {
+    height: 58vh;
+  }
+}
+
+@media screen and (max-height: 600px) {
   .world-map {
     height: 50vh;
+  }
+}
+
+.pulsate {
+  animation: pulse 200ms ease-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.7);
+  }
+
+  70% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(0.7);
   }
 }

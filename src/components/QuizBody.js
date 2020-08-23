@@ -35,7 +35,7 @@ const ButtonState = {
   }
 };
 
-const questionCount = 10;
+const questionCount = 5;
 
 function initializeGame(gameType, setQuestions, setQuizState) {
   console.log("Initializing new game...");
@@ -132,8 +132,7 @@ export const QuizBody = () => {
       const selectedCountryName = currentQuestion ? currentQuestion.answer.name : null;
 
       return <Box>
-        <WorldMap selectedCountryName={selectedCountryName}
-                  showCountryName={currentQuestion.answered}/>
+        <WorldMap selectedCountryName={selectedCountryName}/>
         <LinearProgress variant="determinate" value={getProgress(questions, quizState)} />
         <QuizButtons
             question={currentQuestion}
@@ -237,13 +236,58 @@ const AnswerCaption = ({question, advanceToNextQuestionCallback}) => {
 };
 
 const FinalScore = ({finalScore, newGameCallback, chooseGameCallback}) => {
+  const [displayStep, setDisplayStep] = useState(1);
+  const [scoreTally, setScoreTally] = useState(0);
+
+  useEffect(() => {
+    console.log("useEffect::");
+
+    if (displayStep === 1) {
+      setTimeout(() => {
+        setDisplayStep(2);
+      }, 1000);
+    }
+
+    if (displayStep === 2) {
+      let finalScoreTicker = setTimeout(() => {
+        if (scoreTally < finalScore.correctAnswerCount) {
+          console.log("bumping score tally to " + (scoreTally + 1));
+          setScoreTally(() => scoreTally + 1);
+        } else {
+          clearTimeout(finalScoreTicker);
+          setDisplayStep(3);
+        }
+      }, 100);
+    }
+
+    if (displayStep === 3) {
+      setTimeout(() => {
+        setDisplayStep(4);
+      }, 750);
+    }
+  });
+
+  let scoreClassName = "final-score";
+
+  if (displayStep < 2) {
+    scoreClassName += " hidden";
+  } else if (displayStep < 3) {
+    scoreClassName += " pulsate";
+  }
+
   return <Container className={"final-score-container"}>
     <Typography
+        variant="overline">Final Score</Typography>
+    <Typography
         variant="h3"
-        className={"final-score"}>You got {finalScore.correctAnswerCount} / {finalScore.totalQuestions}</Typography>
+        className={scoreClassName}>
+      {scoreTally} / {finalScore.totalQuestions}
+    </Typography>
     <Typography
         variant="subtitle2"
-        className={"final-score-verdict"}>{finalScore.verdict}</Typography>
+        className={displayStep < 4 ? "final-score-verdict hidden" : "final-score-verdict"}>
+      {finalScore.verdict}
+    </Typography>
 
     <Grid container justify="center" spacing={2}>
       <Grid item>
