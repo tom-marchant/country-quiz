@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {GeoJSON, Map, TileLayer, Tooltip} from "react-leaflet";
+import {GeoJSON, Map, TileLayer} from "react-leaflet";
 import MapConfig from "../config/MapConfig";
 import Countries from "../cache/Countries";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // Credit to https://oramind.com/country-border-highlighting-with-leaflet-js/
 // Shapefile compressed/converted to GeoJSON via https://gdal.org/
@@ -15,9 +16,10 @@ export const WorldMap = ({selectedCountryName}) => {
 
   useEffect(() => {
     if (selectedCountryName) {
-      Countries.getGeoData().then((geoData) => {
-        setSelectedFeature(geoData.find(
-            country => country.properties.NAME === selectedCountryName))
+      const isoCode = Countries.get().find(country => country.name === selectedCountryName).isoCode;
+
+      Countries.getGeoData(isoCode).then((geoData) => {
+        setSelectedFeature(geoData)
       });
     } else {
       setSelectedFeature(null);
@@ -40,38 +42,53 @@ export const WorldMap = ({selectedCountryName}) => {
     }
   }
 
-  return <Map center={INITIAL_START_POSITION}
-              animate={true}
-              duration={1}
-              useFlyTo={true}
-              zoom={2}
-              minZoom={1}
-              maxZoom={10}
-              viewport={viewport}
-              className={"world-map"}>
+  return <>
+    {/*<Loader loading={selectedCountryName && !selectedFeature} />*/}
+    <Map center={INITIAL_START_POSITION}
+         animate={true}
+         duration={1}
+         useFlyTo={true}
+         zoom={2}
+         minZoom={1}
+         maxZoom={10}
+         viewport={viewport}
+         className={"world-map"}>
 
-    { MapConfig.hasAccessToken
-        ? <TileLayer
-            url={MapConfig.TILE_LAYER_URL}
-            attribution={MapConfig.TILE_ATTRIBUTION}
-            tileSize={512}
-            zoomOffset={-1}
-            id={MapConfig.TILE_LAYER_ID}/>
-        : null }
+      {MapConfig.hasAccessToken
+          ? <TileLayer
+              url={MapConfig.TILE_LAYER_URL}
+              attribution={MapConfig.TILE_ATTRIBUTION}
+              tileSize={512}
+              zoomOffset={-1}
+              id={MapConfig.TILE_LAYER_ID}/>
+          : null}
 
-    { selectedFeature
-        ? <GeoJSON data={selectedFeature}
-                   key={selectedFeature.properties.NAME}
-                   style={{
-                     "weight": 1,
-                     "opacity": 1,
-                     "color": "#ddd",
-                     "fillColor": "#3f51b5",
-                     "fillOpacity": "0.5"
-                   }} >
-        </GeoJSON>
-        : null }
-  </Map>
+      {selectedFeature
+          ? <GeoJSON data={selectedFeature}
+                     key={selectedFeature.properties.NAME}
+                     style={{
+                       "weight": 1,
+                       "opacity": 1,
+                       "color": "#ddd",
+                       "fillColor": "#3f51b5",
+                       "fillOpacity": "0.5"
+                     }}>
+          </GeoJSON>
+          : null}
+    </Map>
+  </>
+};
+
+const Loader = ({loading}) => {
+  if (loading) {
+    return <CircularProgress
+        classes={{
+          root: "world-map-loader"
+        }}
+        size={60}/>
+  } else {
+    return null
+  }
 };
 
 function getAppropriateZoomLevel(boundingBox) {
@@ -81,7 +98,7 @@ function getAppropriateZoomLevel(boundingBox) {
 
   const maxSize = Math.max(latDelta, longDelta).toFixed(1);
 
-  console.log("Max size was: " + maxSize);
+  //console.log("Max size was: " + maxSize);
 
   let zoomLevel = 1;
 
@@ -101,7 +118,7 @@ function getAppropriateZoomLevel(boundingBox) {
     zoomLevel = 2
   }
 
-  console.log("Zoom was: " + zoomLevel);
+  //console.log("Zoom was: " + zoomLevel);
 
   return zoomLevel;
 }

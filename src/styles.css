@@ -79,6 +79,13 @@ body {
   height: 70vh;
 }
 
+.world-map-loader {
+  position: absolute;
+  left: calc(50% - 30px);
+  top: calc(40vh - 30px);
+  z-index: 999;
+}
+
 @media screen and (max-height: 700px) {
   .world-map {
     height: 58vh;

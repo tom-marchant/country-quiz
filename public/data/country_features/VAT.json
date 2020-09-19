@@ -1,0 +1,45 @@
+{
+	"type": "Feature",
+	"properties": {
+		"FIPS": "VT",
+		"ISO2": "VA",
+		"ISO3": "VAT",
+		"UN": 336,
+		"NAME": "Holy See (Vatican City)",
+		"AREA": 0,
+		"POP2005": 783,
+		"REGION": 150,
+		"SUBREGION": 39,
+		"LON": 12.451,
+		"LAT": 41.904
+	},
+	"bbox": [
+		12.45,
+		41.9,
+		12.46,
+		41.91
+	],
+	"geometry": {
+		"type": "Polygon",
+		"coordinates": [
+			[
+				[
+					12.45,
+					41.9
+				],
+				[
+					12.45,
+					41.91
+				],
+				[
+					12.46,
+					41.9
+				],
+				[
+					12.45,
+					41.9
+				]
+			]
+		]
+	}
+}
