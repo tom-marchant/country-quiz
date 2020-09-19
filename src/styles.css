@@ -64,7 +64,7 @@ body {
   height: 150px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 900px) {
   .country-answer-button {
     width: 150px;
     height: 60px;
@@ -76,7 +76,7 @@ body {
 }
 
 .world-map {
-  height: 70vh;
+  height: 60vh;
 }
 
 .world-map-loader {

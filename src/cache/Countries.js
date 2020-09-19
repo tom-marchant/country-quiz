@@ -24,11 +24,11 @@ function getAllGeoData() {
 function getGeoData(countryIsoCode) {
   return fetch(`data/country_features/${countryIsoCode}.json`)
   .then(response => response.json())
-  .then(json => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(json), 2000);
-    })
-  })
+  // .then(json => {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => resolve(json), 2000);
+  //   })
+  // })
 }
 
 export default {

@@ -35,7 +35,7 @@ const ButtonState = {
   }
 };
 
-const questionCount = 5;
+const questionCount = 10;
 
 function initializeGame(gameType, setQuestions, setQuizState) {
   console.log("Initializing new game...");
