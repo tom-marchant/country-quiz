@@ -15,6 +15,10 @@ export const WorldMap = ({selectedCountryName}) => {
   const [selectedFeature, setSelectedFeature] = useState(null);
 
   useEffect(() => {
+    // Fix map viewport height for mobile
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
     if (selectedCountryName) {
       const isoCode = Countries.get().find(country => country.name === selectedCountryName).isoCode;
 

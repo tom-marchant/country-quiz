@@ -1,6 +1,13 @@
+:root {
+  /*  Used as a fix for mobile browsers.
+      See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+  --vh: 1vh;
+}
+
 body {
   margin: 0;
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .hidden {
@@ -28,6 +35,7 @@ body {
 .country-answer-button--label {
   text-transform: none;
   line-height: 1.2;
+  font-size: 0.95em;
 }
 
 .answer-caption-container {
@@ -77,6 +85,7 @@ body {
 
 .world-map {
   height: 60vh;
+  height: calc(var(--vh, 1vh) * 60);
 }
 
 .world-map-loader {
@@ -89,12 +98,14 @@ body {
 @media screen and (max-height: 700px) {
   .world-map {
     height: 58vh;
+    height: calc(var(--vh, 1vh) * 58);
   }
 }
 
 @media screen and (max-height: 600px) {
   .world-map {
     height: 50vh;
+    height: calc(var(--vh, 1vh) * 50);
   }
 }
 
