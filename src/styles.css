@@ -14,8 +14,13 @@ body {
   visibility: hidden;
 }
 
+.drawer-close-header {
+  text-align: right;
+}
+
 .drawer-items {
-  min-width: 400px;
+  width: 400px;
+  max-width: 90vw;
 }
 
 .countries-autocomplete-holder {

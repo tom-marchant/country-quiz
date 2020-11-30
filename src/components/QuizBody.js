@@ -111,8 +111,7 @@ function getScore(quizState) {
   };
 }
 
-export const QuizBody = () => {
-  const [gameType, setGameType] = useState(null);
+export const QuizBody = ({gameType, setGameType}) => {
   const [questions, setQuestions] = useState(null);
   const [quizState, setQuizState] = useState(null);
 

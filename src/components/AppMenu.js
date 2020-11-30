@@ -5,30 +5,50 @@ import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import {AppMode} from "./AppMode";
 import Drawer from "@material-ui/core/Drawer";
+import IconButton from "@material-ui/core/IconButton";
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
 
-export const AppMenu = ({appMode, setAppMode, menuOpen, setMenuOpen}) => {
+export const AppMenu = ({setAppMode, setGameType, menuOpen, setMenuOpen}) => {
   return <Drawer
       open={menuOpen}
       onClose={() => setMenuOpen(false)}>
-    {buildMenuItems(setAppMode, setMenuOpen)}
+    {buildMenuItems(setAppMode, setGameType, setMenuOpen)}
   </Drawer>
 };
 
-const buildMenuItems = (setAppMode, setMenuOpen) => {
-  return <div role="presentation">
-    <List className={"drawer-items"}>
-      {Object.keys(AppMode).map((key) =>
-          <ListItem button
-                    key={key}>
-            <ListItemText primary={AppMode[key].title}
-                          secondary={AppMode[key].subtitle}
-                          onClick={() => {
-                            setAppMode(AppMode[key]);
-                            setMenuOpen(false);
-                          }}
-            />
-          </ListItem>
-      )}
+const buildMenuItems = (setAppMode, setGameType, setMenuOpen) => {
+  return <div role="presentation" className={"drawer-items"}>
+    <div className={"drawer-close-header"}>
+      <IconButton onClick={() => { setMenuOpen(false)}}>
+        <ChevronLeft />
+      </IconButton>
+    </div>
+
+    <Divider />
+
+    <List>
+        <ListItem button
+                  key={AppMode.QUIZ}>
+          <ListItemText primary={AppMode.QUIZ.title}
+                        secondary={AppMode.QUIZ.subtitle}
+                        onClick={() => {
+                          setGameType(null);
+                          setAppMode(AppMode.QUIZ);
+                          setMenuOpen(false);
+                        }}
+          />
+        </ListItem>
+      <ListItem button
+                key={AppMode.REFERENCE_MODE}>
+        <ListItemText primary={AppMode.REFERENCE_MODE.title}
+                      secondary={AppMode.REFERENCE_MODE.subtitle}
+                      onClick={() => {
+                        setGameType(null);
+                        setAppMode(AppMode.REFERENCE_MODE);
+                        setMenuOpen(false);
+                      }}
+        />
+      </ListItem>
     </List>
     <Divider/>
   </div>

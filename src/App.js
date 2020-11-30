@@ -12,23 +12,26 @@ import {AppMenu} from "./components/AppMenu";
 
 function App() {
   const [appMode, setAppMode] = useState(AppMode.QUIZ);
+  const [gameType, setGameType] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
       <>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
-            <IconButton edge="start"
-                        onClick={() => setMenuOpen(true)}
-                        color="inherit"
-                        aria-label="menu">
-              <MenuIcon />
+            <IconButton
+                edge="start"
+                onClick={() => setMenuOpen(true)}
+                color="inherit"
+                aria-label="menu">
+              <MenuIcon/>
             </IconButton>
 
-            <AppMenu appMode={appMode}
-                     setAppMode={setAppMode}
-                     menuOpen={menuOpen}
-                     setMenuOpen={setMenuOpen} />
+            <AppMenu
+                setAppMode={setAppMode}
+                setGameType={setGameType}
+                menuOpen={menuOpen}
+                setMenuOpen={setMenuOpen}/>
 
             <Typography variant="h6">
               Country Quiz
@@ -36,7 +39,13 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        <AppBody appMode={appMode}/>
+        {/* Second toolbar to ensure content isn't hidden behind previous fixed toolbar */}
+        <Toolbar />
+
+        <AppBody
+            appMode={appMode}
+            gameType={gameType}
+            setGameType={setGameType}/>
       </>
   );
 }
